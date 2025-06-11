@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.sidebar {
+    width: 220px;
+    margin-right: 24px;
+    border-right: 1px solid #eee;
+    padding-right: 16px;
+    overflow-y: auto;
+    max-height: 600px;
+}
+.sidebarTitle {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.sidebarList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebarItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-weight: 400;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: background 0.2s, border 0.2s;
+}
+.currentItem {
+    background: #e0e7ff;
+    font-weight: 700;
+    border: 1px solid #6366f1;
+}
+.selectedItem {
+    background: #bbf7d0;
+    border: 1px solid #22c55e;
+}
+.sidebarItemLabel {
+    flex: 1;
+    cursor: pointer;
+}
+.selectButton {
+    margin-left: 8px;
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+.deselectButton {
+    margin-left: 8px;
+    background: #22c55e;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+.mainContent {
+    flex: 1;
+}
+.filterRow {
+    margin-bottom: 16px;
+}
+.inputNumber {
+    width: 60px;
+}
+.navigationRow {
+    margin-bottom: 16px;
+}
+.form {
+    margin-top: 20px;
+}
+.actionRow {
+    margin-top: 16px;
+}
+.downloadRow {
+    margin-top: 24px;
+}
+.selectAllRow {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+}
+.selectAllButton {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+.deselectAllButton {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
