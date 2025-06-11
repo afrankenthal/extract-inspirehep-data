@@ -1,9 +1,6 @@
 import requests
 import json
 
-# FNAL-E-0740: D0 Run 1
-# FNAL-E-0989: Muon g-2 at Fermilab
-
 def load_expt(expt_id, expt_name):
     base_url = 'https://inspirehep.net/api/experiments/'
     url = base_url + str(expt_id)
