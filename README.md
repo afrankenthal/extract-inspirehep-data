@@ -1,6 +1,6 @@
 # Extract InspireHEP Data
 
-(NB: everything in this project including the README was generated with AI, so always check the output behavior!)
+**_NB: everything in this project including the README was generated with AI, so always check the output behavior!_**
 
 This project is a Next.js application called "extract-inspirehep-data". It serves as a simple homepage to extract data from the InspireHEP database.
 
