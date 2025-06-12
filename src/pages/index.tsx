@@ -16,6 +16,7 @@ const Home: React.FC = () => {
     const [selected, setSelected] = useState<Set<number>>(new Set());
     const [minPapers, setMinPapers] = useState<number>(0);
     const [schema, setSchema] = useState<any>(null);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         fetchExperiments().then(data => {
@@ -41,6 +42,16 @@ const Home: React.FC = () => {
         setSelected(new Set());
     }, [experiments, minPapers]);
 
+    // Helper to filter experiments by search string (case-insensitive, matches legacy_name, name, or id)
+    const matchesSearch = (exp: any) => {
+        const s = search.trim().toLowerCase();
+        if (!s) return true;
+        return (
+            (exp.legacy_name && exp.legacy_name.toLowerCase().includes(s)) ||
+            (exp.name && exp.name.toLowerCase().includes(s)) ||
+            (exp.id && String(exp.id).toLowerCase().includes(s))
+        );
+    };
 
     const handleFieldChange = (field: string, value: string) => {
         setEditedEntry((prev: any) => ({
@@ -283,30 +294,40 @@ const Home: React.FC = () => {
         <div className={styles.container}>
             {/* Sidebar list */}
             <div className={styles.sidebar}>
-                <div className={styles.sidebarTitle}>Entries</div>
+                <input
+                    type="text"
+                    placeholder="Search entries..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    className={styles.searchInput}
+                    style={{ width: '100%', marginBottom: 8, padding: 6, borderRadius: 4, border: '1px solid #ccc' }}
+                />
+                <div className={styles.sidebarTitle}>Selected Entries</div>
                 <ul className={styles.sidebarList}>
-                    {filteredExperiments.map((exp, idx) => (
-                        <li
-                            key={idx}
-                            className={[
-                                styles.sidebarItem,
-                                idx === currentIdx ? styles.currentItem : '',
-                                selected.has(idx) ? styles.selectedItem : ''
-                            ].join(' ')}
-                            title={exp.legacy_name || exp.name || exp.id || `Entry ${idx + 1}`}
-                            onClick={() => {
-                                setCurrentIdx(idx);
-                                setEditedEntry({ ...filteredExperiments[idx] });
-                            }}
-                        >
-                            <span
-                                className={styles.sidebarItemLabel}
-                                onClick={() => setCurrentIdx(idx)}
+                    {filteredExperiments
+                        .map((exp, idx) => ({ exp, idx }))
+                        .filter(({ idx, exp }) => selected.has(idx) && matchesSearch(exp))
+                        .map(({ exp, idx }) => (
+                            <li
+                                key={idx}
+                                className={[
+                                    styles.sidebarItem,
+                                    idx === currentIdx ? styles.currentItem : '',
+                                    styles.selectedItem
+                                ].join(' ')}
+                                title={exp.legacy_name || exp.name || exp.id || `Entry ${idx + 1}`}
+                                onClick={() => {
+                                    setCurrentIdx(idx);
+                                    setEditedEntry({ ...filteredExperiments[idx] });
+                                }}
                             >
-                                {(exp.legacy_name || exp.name || exp.id || `Entry ${idx + 1}`) +
-                                    (typeof exp.number_of_papers === 'number' ? ` (${exp.number_of_papers})` : '')}
-                            </span>
-                            {selected.has(idx) ? (
+                                <span
+                                    className={styles.sidebarItemLabel}
+                                    onClick={() => setCurrentIdx(idx)}
+                                >
+                                    {(exp.legacy_name || exp.name || exp.id || `Entry ${idx + 1}`) +
+                                        (typeof exp.number_of_papers === 'number' ? ` (${exp.number_of_papers})` : '')}
+                                </span>
                                 <button
                                     className={styles.deselectButton}
                                     onClick={e => {
@@ -321,7 +342,34 @@ const Home: React.FC = () => {
                                 >
                                     ✓
                                 </button>
-                            ) : (
+                            </li>
+                        ))}
+                </ul>
+                <div className={styles.sidebarTitle} style={{ marginTop: 24 }}>Unselected Entries</div>
+                <ul className={styles.sidebarList}>
+                    {filteredExperiments
+                        .map((exp, idx) => ({ exp, idx }))
+                        .filter(({ idx, exp }) => !selected.has(idx) && matchesSearch(exp))
+                        .map(({ exp, idx }) => (
+                            <li
+                                key={idx}
+                                className={[
+                                    styles.sidebarItem,
+                                    idx === currentIdx ? styles.currentItem : ''
+                                ].join(' ')}
+                                title={exp.legacy_name || exp.name || exp.id || `Entry ${idx + 1}`}
+                                onClick={() => {
+                                    setCurrentIdx(idx);
+                                    setEditedEntry({ ...filteredExperiments[idx] });
+                                }}
+                            >
+                                <span
+                                    className={styles.sidebarItemLabel}
+                                    onClick={() => setCurrentIdx(idx)}
+                                >
+                                    {(exp.legacy_name || exp.name || exp.id || `Entry ${idx + 1}`) +
+                                        (typeof exp.number_of_papers === 'number' ? ` (${exp.number_of_papers})` : '')}
+                                </span>
                                 <button
                                     className={styles.selectButton}
                                     onClick={e => {
@@ -336,9 +384,8 @@ const Home: React.FC = () => {
                                 >
                                     +
                                 </button>
-                            )}
-                        </li>
-                    ))}
+                            </li>
+                        ))}
                 </ul>
             </div>
             {/* Main content */}
