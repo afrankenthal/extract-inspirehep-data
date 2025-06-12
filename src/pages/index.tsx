@@ -302,6 +302,22 @@ const Home: React.FC = () => {
                     className={styles.searchInput}
                     style={{ width: '100%', marginBottom: 8, padding: 6, borderRadius: 4, border: '1px solid #ccc' }}
                 />
+                <div className={styles.selectAllRow} style={{ marginBottom: 16, display: 'flex', gap: 8 }}>
+                    <button
+                        onClick={() => setSelected(new Set(filteredExperiments.map((_, idx) => idx)))}
+                        className={styles.selectAllButton}
+                        style={{ flex: 1 }}
+                    >
+                        Select All
+                    </button>
+                    <button
+                        onClick={() => setSelected(new Set())}
+                        className={styles.deselectAllButton}
+                        style={{ flex: 1 }}
+                    >
+                        Deselect All
+                    </button>
+                </div>
                 <div className={styles.sidebarTitle}>Selected Entries</div>
                 <ul className={styles.sidebarList}>
                     {filteredExperiments
@@ -410,6 +426,28 @@ const Home: React.FC = () => {
                     </span>
                     <button onClick={handleNext} disabled={currentIdx === filteredExperiments.length - 1}>Next</button>
                 </div>
+                {/* Move action buttons here */}
+                <div className={styles.actionRow} style={{ marginBottom: 16 }}>
+                    <button onClick={handleSave} style={{ marginRight: 8 }}>Save Edits</button>
+                    <button
+                        onClick={fixClassifications}
+                        type="button"
+                        style={{ marginRight: 8 }}
+                    >
+                        Fix Classification
+                    </button>
+                    {isSelected ? (
+                        <button style={{ marginRight: 8 }} onClick={handleDeselect}>Deselect</button>
+                    ) : (
+                        <button style={{ marginRight: 8 }} onClick={handleSelect}>Select</button>
+                    )}
+                    <button
+                        onClick={handleDownload}
+                        disabled={selected.size === 0}
+                    >
+                        Download Selected ({selected.size})
+                    </button>
+                </div>
                 <form className={styles.form}>
                     {schema
                         ? Object.entries(schema.properties).map(([key, prop]: [string, any]) =>
@@ -423,42 +461,6 @@ const Home: React.FC = () => {
                         : <div>Loading schema...</div>
                     }
                 </form>
-                <div className={styles.actionRow}>
-                    <button onClick={handleSave}>Save Edits</button>
-                    <button
-                        style={{ marginLeft: 8 }}
-                        onClick={fixClassifications}
-                        type="button"
-                    >
-                        Fix inspire_classification & facet_inspire_classification
-                    </button>
-                    {isSelected ? (
-                        <button style={{ marginLeft: 8 }} onClick={handleDeselect}>Deselect</button>
-                    ) : (
-                        <button style={{ marginLeft: 8 }} onClick={handleSelect}>Select</button>
-                    )}
-                </div>
-                <div className={styles.downloadRow}>
-                    <button onClick={handleDownload} disabled={selected.size === 0}>
-                        Download Selected ({selected.size})
-                    </button>
-                </div>
-                <div className={styles.selectAllRow}>
-                    <button
-                        onClick={() => {
-                            setSelected(new Set(filteredExperiments.map((_, idx) => idx)));
-                        }}
-                        className={styles.selectAllButton}
-                    >
-                        Select All
-                    </button>
-                    <button
-                        onClick={() => setSelected(new Set())}
-                        className={styles.deselectAllButton}
-                    >
-                        Deselect All
-                    </button>
-                </div>
             </div>
         </div>
     );
